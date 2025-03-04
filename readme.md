@@ -16,16 +16,16 @@ the correction is performed by following the next steps:
 SetupInfo.SetupInfo(screenSize,screenDistance, resolution, sampleRate)   where
 
         screenSize:     physical size of the display in cm (w,h)
-   
+        
         screenDistance: distance between participant and display in cm
-   
+        
         resolution:     resolution of the display in pixels (w,h)
-   
+        
         sampleRate:     sampling rate of the data in Hz
 
    
 
-3. separate the gaze and pupil data into trials. Each trial should start and end with gaze position at roughly the same position on the screen. (e.g., a central fixation).
+3. separate the gaze and pupil data into trials. Each trial should start and end with gaze position at roughly the same position on the screen (e.g., a central fixation) to correctly perform participant correction (participantCorrection). 
 for each trial, also get all relevant saccade events.Get the events ready for processing by constructing Event objects. These can be constructed by calling
 Event.Event(start, end)
         
@@ -43,7 +43,7 @@ Trial objects can be constructed using Trial.Trial(trace, events)
 
 finally, neatly pack all trials per participant by constructing Participant objects
 Participant(trials, setupInfo, pupsizeIndex=2, xIndex=0, yIndex=1)
-
+        
         trials:         list of Trial objects
         
         setupInfo:      SetupInfo object
