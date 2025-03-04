@@ -14,7 +14,7 @@ the correction is performed by following the next steps:
 
 1. Define relevant information regarding the setup used to collect data. This is stored using a SetupInfo object. Define this object by calling:
 SetupInfo.SetupInfo(screenSize,screenDistance, resolution, sampleRate)   where
- 
+
     screenSize:     physical size of the display in cm (w,h)
    
     screenDistance: distance between participant and display in cm
@@ -26,9 +26,7 @@ SetupInfo.SetupInfo(screenSize,screenDistance, resolution, sampleRate)   where
    
 
 3. separate the gaze and pupil data into trials. Each trial should start and end with gaze position at roughly the same position on the screen. (e.g., a central fixation).
-for each trial, also get all relevant saccade events.
-
-get the events ready for processing by constructing Event objects. These can be constructed by calling
+for each trial, also get all relevant saccade events.Get the events ready for processing by constructing Event objects. These can be constructed by calling
 Event.Event(start, end)
 
     start:  start index of the event, relative to the corresponding trial
@@ -36,12 +34,11 @@ Event.Event(start, end)
     end:    end index of the event, relative to the corresponding trial
     
 
-Trial objects can be constructed using
-Trial.Trial(trace, events)
-
+Trial objects can be constructed using Trial.Trial(trace, events)
+.
     trace   list of tuples or dicts that contain the eyetracking data. 
             The norm for this is (x, y, pupilSize)
-            
+.
     events  list of Event objects 
 
 finally, neatly pack all trials per participant by constructing Participant objects
