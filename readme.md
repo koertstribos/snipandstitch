@@ -13,13 +13,18 @@ before using the correction one needs:
 the correction is performed by following the next steps:
 
 1. Define relevant information regarding the setup used to collect data. This is stored using a SetupInfo object. Define this object by calling:
-SetupInfo.SetupInfo(screenSize,screenDistance, resolution, sampleRate)   where 
+SetupInfo.SetupInfo(screenSize,screenDistance, resolution, sampleRate)   where
+ 
     screenSize:     physical size of the display in cm (w,h)
+   
     screenDistance: distance between participant and display in cm
+   
     resolution:     resolution of the display in pixels (w,h)
+   
     sampleRate:     sampling rate of the data in Hz
+   
 
-2. separate the gaze and pupil data into trials. Each trial should start and end with gaze position at roughly the same position on the screen. (e.g., a central fixation).
+3. separate the gaze and pupil data into trials. Each trial should start and end with gaze position at roughly the same position on the screen. (e.g., a central fixation).
 for each trial, also get all relevant saccade events.
 
 get the events ready for processing by constructing Event objects. These can be constructed by calling
