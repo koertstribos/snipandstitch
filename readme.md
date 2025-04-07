@@ -37,13 +37,13 @@ Trial objects can be constructed using
     
     Trial.Trial(trace, events, setupInfo)
     -------------------------------------
-    trace:      list of tuples or dicts that contain the eyetracking data. 
-                The norm for this is (x, y, pupilSize)
+    trace:      list of tuples that contain the eyetracking data. 
+                Should be provided as [(x_0, y_0, pupilSize_0), (x_1, y_1, pupilSize_1), ... , (x_n, y_n, pupilSize_n)]
     events:     list of Event objects 
     setupInfo:  SetupInfo object
 
 
-4: you can now get corrected gaze position from a Trial object by calling
+4: you can now get corrected gaze position from a Trial object by calling:
 
     trial.CorrectedPupsize(index)
     -------------------------------------
@@ -53,7 +53,10 @@ By default, intra-saccadic pupil size change is interpolated using linear regres
 
     trial.SetInterpolateSlope(False)
 
-moreover, you can perform a drift correction on a subset of trials. In our experiments, we observed error to accumulate at a linear rate different for measurement of each participant. This error can be corrected by calling 
+Moreover, you can perform a drift correction on a subset of trials. 
+In our experiments, we observed error to accumulate at a linear rate different for measurement of each participant.
+Correcting this drift requires trials to start and end with gaze at (roughly) the same position. 
+You can perform the drift correction on a list of trials by calling:
 
     Functions.SetLinearCorrection(trials)
     -------------------------------------
