@@ -1,4 +1,3 @@
-import scipy.linalg as la
 import numpy as np
 
 def SetLinearCorrection(trials):
