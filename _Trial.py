@@ -79,7 +79,7 @@ class _T():
     def _CorrectedPupsize(self, index):
         return self[self._ClampIndex(index)]
     
-    def View(self, viewer):
+    def _View(self, viewer):
         startIndex = 0
         endIndex = len(self)
         
