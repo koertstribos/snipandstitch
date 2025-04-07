@@ -30,3 +30,6 @@ class Trial(_Trial._T):
             raise Exception(f"index {index} out of range")
         return super()._Pos(index)
     
+    def SetInterpolateSlope(self, doInterpolate):
+        super()._SetSnipStitchSettings(doInterpolateSlope = doInterpolate)
+    
