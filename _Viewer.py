@@ -57,4 +57,4 @@ class _V():
         trial = self._ts[self._currentlyViewing]
 
         trial._SetSnipStitchSettings(doInterpolateSlope = self.interpolatingPupilSizeChange)
-        trial.View(self)
+        trial._View(self)
