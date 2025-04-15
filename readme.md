@@ -7,6 +7,7 @@ usage:
 
 before using the correction one needs:
 
+0. download this package, and put the full folder in your python working directory
 1. gaze and pupil data, as a list of tuples or dicts where each sample is saved like (x,y,pupilSize)
 2. a list of to-be-corrected saccades
 
