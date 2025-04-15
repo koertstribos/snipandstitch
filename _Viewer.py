@@ -4,17 +4,17 @@
 
 import tkinter as tk
 
+#_V class
+#for initialisation, see Viewer.py
+
 class _V():
     def __init__(self, trials):
         self._ts = trials
-
         self.root = tk.Tk()
         self.root.title("Viewer")
-
+        
         self.viewingResolution = 1
-
         self.interpolatingPupilSizeChange = True
-
         self._currentlyViewing = 0
 
         #add buttons for trial selection
@@ -36,11 +36,23 @@ class _V():
 
         self.root.mainloop()
 
+    #ChangeTrial
+    #increment or decrement viewed trial, and view it
+    #args:
+    #    change: int, representing the increment amount (+1, or -1)
+    #out:
+    #    None
     def ChangeTrial(self, change):
         self._currentlyViewing += change
         self._currentlyViewing %= len(self._ts)
         self.ViewTrial()
 
+    #Toggle
+    #toggle a setting, and view trial with changed setting
+    #args:
+    #    value:    string or char, representing the setting (can only be 'i')
+    #out:
+    #    None
     def Toggle(self, value):
         if value == 'i':
             self.interpolatingPupilSizeChange = not self.interpolatingPupilSizeChange
@@ -50,11 +62,15 @@ class _V():
         
         self.ViewTrial()
 
+    #PrintTrialInfo
+    #prints info of the trial that is currently being viewed
     def PrintTrialInfo(self):
         print(self._ts[self._currentlyViewing]._SnipStitches.__repr__())
 
+    #ViewTrial
+    #view the trial that is currently selected
+    #TODO(?): here, it could be unclear or illogical that the settings in a trial are changed for good. This could cause unwanted behaviour.
     def ViewTrial(self):
         trial = self._ts[self._currentlyViewing]
-
         trial._SetSnipStitchSettings(doInterpolateSlope = self.interpolatingPupilSizeChange)
         trial._View(self)
