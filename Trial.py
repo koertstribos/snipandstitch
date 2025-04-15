@@ -15,21 +15,45 @@ class Trial(_Trial._T):
     def __init__(self, trialTrace, trialEvents, setupInfo):
         super().__init__(trialTrace, trialEvents, setupInfo)
 
+    #CorrectedPupsize
+    #returns a pupil size measurement at a given index after applying snipandstitch correcton
+    #in:
+    #index: int, index of sample relative to trial
+    #out:
+    #float, corrected pupil size from that index
     def CorrectedPupsize(self, index):
         if index < 0 or index >= len(self):
             raise Exception(f"index {index} out of range")
         return super()._CorrectedPupsize(index)
 
+    #RawPupsize
+    #returns a pupil size measurement at a given index without applying snipandstitch correction
+    #in:
+    #index: int, index of sample relative to trial
+    #out:
+    #float, corrected pupil size from that index
     def RawPupsize(self, index):
         if index < 0 or index >= len(self):
             raise Exception(f"index {index} out of range")
         return super()._RawPupsize(index)
-    
+
+    #Pos
+    #returns position of gaze at a given index
+    #in:
+    #index: int, index of sample relative to trial
+    #out:
+    #(x,y) tuple. Type is defined by user in Trial() initialisation
     def Pos(self, index):
         if index < 0 or index >= len(self):
             raise Exception(f"index {index} out of range")
         return super()._Pos(index)
-    
+
+    #SetInterpolateSlope
+    #Turn the intra-saccadic slope interpolation on or off
+    #in:
+    #doInterpolate, Bool. Whether to interpolate
+    #out:
+    #None
     def SetInterpolateSlope(self, doInterpolate):
         super()._SetSnipStitchSettings(doInterpolateSlope = doInterpolate)
     
