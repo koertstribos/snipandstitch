@@ -29,5 +29,3 @@ class _E():
         ax.axvline(end, c=col, linestyle=linestyle)
         ax.fill_between([start, end], ylims[0], ylims[1], color=col, alpha=0.5)
 
-
-        

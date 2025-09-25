@@ -14,7 +14,6 @@ class _V():
         self.root.title("Viewer")
         
         self.viewingResolution = 1
-        self.interpolatingPupilSizeChange = True
         self._currentlyViewing = 0
 
         #add buttons for trial selection
@@ -24,15 +23,11 @@ class _V():
         self.nextButton = tk.Button(self.root, text="Next", command=lambda: self.ChangeTrial(1))
         self.nextButton.pack(side=tk.LEFT)
 
-        self.toggleInterpolationButton = tk.Button(self.root, text="Toggle interpolation", command=lambda: self.Toggle('i'))
-        self.toggleInterpolationButton.pack(side=tk.LEFT)
-
         #add button for viewing directly
         self.viewButton = tk.Button(self.root, text="View", command=self.ViewTrial)
         self.viewButton.pack(side=tk.LEFT)
 
         self.trialInfoButton = tk.Button(self.root, text="Trial info", command=self.PrintTrialInfo)
-
 
         self.root.mainloop()
 
@@ -47,21 +42,6 @@ class _V():
         self._currentlyViewing %= len(self._ts)
         self.ViewTrial()
 
-    #Toggle
-    #toggle a setting, and view trial with changed setting
-    #args:
-    #    value:    string or char, representing the setting (can only be 'i')
-    #out:
-    #    None
-    def Toggle(self, value):
-        if value == 'i':
-            self.interpolatingPupilSizeChange = not self.interpolatingPupilSizeChange
-            print(f"Interpolation is now {self.interpolatingPupilSizeChange}")
-        else:
-            raise ValueError(f"Value {value} not supported")
-        
-        self.ViewTrial()
-
     #PrintTrialInfo
     #prints info of the trial that is currently being viewed
     def PrintTrialInfo(self):
@@ -72,5 +52,4 @@ class _V():
     #TODO(?): here, it could be unclear or illogical that the settings in a trial are changed for good. This could cause unwanted behaviour.
     def ViewTrial(self):
         trial = self._ts[self._currentlyViewing]
-        trial._SetSnipStitchSettings(doInterpolateSlope = self.interpolatingPupilSizeChange)
         trial._View(self)

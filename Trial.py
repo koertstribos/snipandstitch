@@ -12,8 +12,8 @@ from . import _Trial
 #trialTrace: list of samples, each sample is a dict or list that contains x, y, and pupsize
 #trialEvents: list of Event objects (see Event.py)
 class Trial(_Trial._T):
-    def __init__(self, trialTrace, trialEvents, setupInfo):
-        super().__init__(trialTrace, trialEvents, setupInfo)
+    def __init__(self, trialTrace, trialEvents, samplingRate = None):
+        super().__init__(trialTrace, trialEvents, samplingRate)
 
     #CorrectedPupsize
     #returns a pupil size measurement at a given index after applying snipandstitch correcton
@@ -22,8 +22,7 @@ class Trial(_Trial._T):
     #out:
     #float, corrected pupil size from that index
     def CorrectedPupsize(self, index):
-        if index < 0 or index >= len(self):
-            raise Exception(f"index {index} out of range")
+
         return super()._CorrectedPupsize(index)
 
     #RawPupsize
@@ -33,8 +32,7 @@ class Trial(_Trial._T):
     #out:
     #float, corrected pupil size from that index
     def RawPupsize(self, index):
-        if index < 0 or index >= len(self):
-            raise Exception(f"index {index} out of range")
+
         return super()._RawPupsize(index)
 
     #Pos
@@ -56,4 +54,7 @@ class Trial(_Trial._T):
     #None
     def SetInterpolateSlope(self, doInterpolate):
         super()._SetSnipStitchSettings(doInterpolateSlope = doInterpolate)
+
+    #SetLinearCorrection
+    #in Functions.py, see a function for setting the linear correction value
     

@@ -4,6 +4,7 @@
 
 from . import _SnipStitch
 import matplotlib.pyplot as plt
+from math import dist
 
 #one trial
 #contains information of one trial
@@ -12,10 +13,10 @@ import matplotlib.pyplot as plt
 #    See subclass Trial (Trial.py)
 class _T():
     #__init__
-    def __init__(self, trace, events, setupInfo):
+    def __init__(self, trace, events, samplingRate):
         self._trace = trace
         self._events = events
-        self._setupInfo = setupInfo
+        self._samplingRate = samplingRate
 
         #check if events are in the trace
         end = self._events[-1].end
@@ -93,8 +94,13 @@ class _T():
     #    None
     def _MakeSnipStitches(self):
         self._SnipStitches = []
-        for event in self._events:
-            self._SnipStitches.append(_SnipStitch.SnipStitch(self, event))
+
+        if self._samplingRate is None:
+            for event in self._events:
+                self._SnipStitches.append(_SnipStitch.SnipStitch(self, event))
+        else:
+            for event in self._events:
+                self._SnipStitches.append(_SnipStitch.SnipStitchSRate(self, event))
 
     #_SetSnipStitchSettings
     #sets the settings of each snipstitch belonging to this trial
@@ -156,17 +162,17 @@ class _T():
         
         fig, axs = plt.subplots(2)
 
-        res = {'samps': [], 'raw': [], 'corr':[], 'dist':[]}
+        res = {'t': [], 'raw': [], 'corr':[], 'dist':[]}
 
         for i in range(startIndex, endIndex, viewer.viewingResolution):
-            res['samps'].append(i-startIndex)
+            res['t'].append(i-startIndex)
             res['raw'].append(self.RawPupsize(i))
-            res['dist'].append(self._setupInfo.Distance(self.Pos(i), self._setupInfo.centre))
+            res['dist'].append(dist(self.Pos(i),self.Pos(startIndex)))
             res['corr'].append(self.CorrectedPupsize(i))
 
-        axs[0].plot(res['samps'], res['raw'], c= [0,    0,  0])
-        axs[0].plot(res['samps'], res['corr'], c=[190/255, 131/255,   181/255])
-        axs[1].plot(res['samps'], res['dist'], c=[0,    0,  0])
+        axs[0].plot(res['t'], res['raw'], c= [0,    0,  0])
+        axs[0].plot(res['t'], res['corr'], c=[190/255, 131/255,   181/255])
+        axs[1].plot(res['t'], res['dist'], c=[0,    0,  0])
 
         #plot events
         #before plotting events, get ylims because using axhline will change them
@@ -176,14 +182,14 @@ class _T():
              for ax in axs]
 
         #plot centre radius as horizontal dashed line
-        axs[1].axhline(y=self._setupInfo.centreRadius, color=[0, 0, 0], linestyle='--')
+        axs[1].axhline(y=0, color=[0, 0, 0], linestyle='--')
 
         axs[0].set_title(f"")
 
-        axs[0].set(xlabel='samples', ylabel='pupil size')
+        axs[0].set(xlabel='t (a.u.)', ylabel='pupil size')
 
         axs[1].get_xaxis().set_visible(False)
-        axs[1].set(ylabel = 'gaze dist.')
+        axs[1].set(ylabel = 'gaze deviation')
 
         for ax in axs:
             ax.spines['top'].set_visible(False)
