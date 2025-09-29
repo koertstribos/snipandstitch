@@ -75,8 +75,12 @@ def SnipAndStitch_MNERaw(raw, channel, saccAnnots, interpolateDPup = True):
 #residualErrorCorrection: bool, whether to apply linear correction for residual error accumulation
 #out:
 #epochs: same MNE Epochs object, with corrected data in specified channel
-def SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErrorCorrection=True, onNoSaccades = 'raise'):
+def SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErrorCorrection=True, onNoSaccades = 'raise', match='ssSacc'):
     from . import Trial, Event
+
+    #cast match to list if string
+    if isinstance(match, str):
+        match=[match]
 
     epochs.load_data()
     data = epochs.get_data(picks=channel)[:, 0, :] #shape (n_epochs, n_times)
@@ -86,9 +90,11 @@ def SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErr
     trials = []
     for trialData, _saccAnnotTup in zip(data, epochs.get_annotations_per_epoch()):
 
+        _saccAnnotTup = [_sAT for _sAT in _saccAnnotTup if _sAT in match]
+        
         if len(_saccAnnotTup) == 0:
             if onNoSaccades == 'raise':
-                raise ValueError("No saccade annotations found for one of the epochs")
+                raise ValueError(f"No annotations starting with '{match}' found for one of the epochs")
             elif onNoSaccades == 'skip':
                 trials.append(None)
                 continue
@@ -143,6 +149,7 @@ def SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErr
 
 
     
+
 
 
 
