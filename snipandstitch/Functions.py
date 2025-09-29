@@ -75,7 +75,7 @@ def SnipAndStitch_MNERaw(raw, channel, saccAnnots, interpolateDPup = True):
 #residualErrorCorrection: bool, whether to apply linear correction for residual error accumulation
 #out:
 #epochs: same MNE Epochs object, with corrected data in specified channel
-def SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErrorCorrection=True, onNoSaccades = 'raise', match='ssSacc'):
+def SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErrorCorrection=False, onNoSaccades = 'raise', match='ssSacc'):
     from . import Trial, Event
 
     #cast match to list if string
@@ -149,6 +149,7 @@ def SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErr
 
 
     
+
 
 
 
