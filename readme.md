@@ -8,8 +8,62 @@ usage:
 before using the correction one needs:
 
 0. "pip install git+https://github.com/koertstribos/snipandstitch", or download this package, and put the full folder in your python working directory
-1. gaze and pupil data, as a list of tuples or dicts where each sample is saved like (x,y,pupilSize)
+1. gaze and pupil data, as a list of tuples or dicts where each sample is saved like (x,y,pupilSize), x and y may be dummy values 0.
 2. a list of to-be-corrected saccades
+
+- - - mne implementation - -
+We provide functions to apply our correction using the popular mne library. To apply our correction, perform the following steps:
+
+1: Import snipandstitch.Functions
+
+    from snipandstitch import Functions as ssFunc
+
+2: Separate the gaze and pupil data into trials and prepare saccade events.
+
+mne requires a list of saccade onsets, list or durations, and list of descriptions (e.g. 'ssSacc'). All in recording time. 
+Critically, snipandstitch expects either a list of annotations to be snipped (raw function), or that the annotations are linked to 
+
+    annots = mne.Annotations(onset, duration, description)
+        onset:        list of onsets in seconds mne time
+        duration:     list of durations in seconds mne time
+        description:  list of descriptions, should be a unique description if operating on Epochs object, ensure that descriptions all match, e.g. all 'ssSacc'
+
+    mne_raw = mne.Raw(...)
+       
+        see mne documentation 
+
+    mne_raw.set_annotations(annots) #required if processing with Epochs
+
+        annots:    previously constructed Annotations object
+
+if using and Epochs object, 
+
+Create Epochs objects for each trial. Alternatively, you can do the correction for all saccades in a single recording in one go (not recommended due to drift)
+
+    epochs = mne.Epochs(...) 
+
+        see mne documentation 
+
+3: You can now call the SnipandStitch correction on an Epochs object by calling
+
+    ssFunc.SnipAndStitch_MNEEpochs(epochs, channelName, interpolateDPup, residualErrorCorrection, match)
+
+    epochs                    MNE epochs object, discontinuous data structure to-be-corrected
+    channelName               string, name of channel to-be-corrected, e.g. 'pupsize'
+    interpolateDpup           boolean, wether to interpolate intra-saccadic pupil size. Default=True
+    residualErrorCorrection   boolean, wether to perform a residual error correction using all Epochs. Default=False
+    match                     string, name of events to be removed. e.g. 'ssSacc'
+
+or, for one-recording data
+
+    ssFunc.SnipAndStitch_MNERaw(mneRaw, channelName, annotations)
+
+    mneRaw        MNE raw object, continuous data structure to-be-corrected
+    channelName   string, name of channel to-be-corrected, e.g. 'pupsize'
+    annotations   MNE Annotations object containing all saccade events
+
+
+- - - python tuple implementation - - -
 
 the correction is performed by following the next steps:
 
@@ -17,16 +71,8 @@ the correction is performed by following the next steps:
 
     from snipandstitch import *
 
-2: Define relevant information regarding the setup used to collect data. This is stored using a SetupInfo object. Define this object by calling:
+2: Separate the gaze and pupil data into trials and prepare saccade events.
 
-    SetupInfo.SetupInfo(screenSize,screenDistance, resolution, sampleRate)
-    -------------------------------------
-    screenSize:     physical size of the display in cm (w,h)
-    screenDistance: distance between participant and display in cm
-    resolution:     resolution of the display in pixels (w,h)
-    sampleRate:     sampling rate of the data in Hz
-
-3: Separate the gaze and pupil data into trials. 
 Get the events ready for processing by constructing Event objects. These can be constructed by calling
 
     Event.Event(start, end)
@@ -36,15 +82,14 @@ Get the events ready for processing by constructing Event objects. These can be 
 
 Trial objects can be constructed using 
     
-    Trial.Trial(trace, events, setupInfo)
+    Trial.Trial(trace, events, samplingRate)
     -------------------------------------
-    trace:      list of tuples that contain the eyetracking data. 
+    trace:      list of tuples that contain the eyetracking data. X and Y values may be dummy (0)
                 Should be provided as [(x_0, y_0, pupilSize_0), (x_1, y_1, pupilSize_1), ... , (x_n, y_n, pupilSize_n)]
     events:     list of Event objects 
-    setupInfo:  SetupInfo object
+    sRate:      sampling rate (samples per second). Needs to be provided in order to estimate intra-saccadic pupil size change.
 
-
-4: you can now get corrected gaze position from a Trial object by calling:
+3: you can now get corrected gaze position from a Trial object by calling:
 
     trial.CorrectedPupsize(index)
     -------------------------------------
