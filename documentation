@@ -1,0 +1,73 @@
+This file contains documentation of classes and functions used in snipandstitch,  a simple, universal correction for the Pupil Foreshortening Error in Saccades the correction works by discarding unexpected change in pupil size observed during saccades
+
+  # # # Classes # # #
+
+-- Event (snipandstitch.Event.Event)
+- Event (self, start, end)
+initialises Event object and returns it
+    start:   start index of the event (relative to trial)
+    end:     end index of the event (relative to trial)
+  
+- Draw (self, ax, ylims, resolution)
+draws the current event on a specified matpotlib ax. 
+    ax: Matplotlib axis object to draw the event on
+    ylims: area to fill_between
+    resolution: number of integers per timepoint
+
+      
+-- Trial (snipandstitch.Trial.Trial)
+- Trial (self, trialTrace, trialEvents, samplingRate = None)
+initialises Trial object and returns it
+      trialTrace: list of 'samples' where each item in list is {x, y pupilsize}
+      trialEvents: list of Event objects associated with the trial
+      samplingRate: sampling frequency of the eye-tracking device. Not required for simple snip&stitch implementation
+
+- CorrectedPupsize (self, index)
+returns corrected pupil size at index (float)
+        index:  int, index of sample (relative to trial)
+
+- RawPupsize (self, index)
+returns uncorrected pupil size at index (float)
+        index: int, index of sample (relative to trial)
+
+- Pos (self, index)
+returns position at given index (2-element tuple)
+    index: int, index of sample (relative to trial)
+
+- SetInterpolateSlope(self, doInterpolate)
+specifies whether intra-saccadic interpolation is turned off or on
+note, only possible to be turned on if sampingRate was provided at Trial initialisation
+    doInterpolate: bool, whether to interpolate.
+
+- - Viewer (snipandstitch.Viewer.Viewer)
+- Viewer (trials)
+starts a Viewer object, which plots the SnpiandStitch correction per trial.
+    trials: list of Trial objects
+
+  
+  # # # Functions # # #
+- - SetLinearCorrection (snipandstitch.Functions.SetLinearCorrection)
+SetLinearCorrection(trials)
+applies linear correction to all trials provided
+      trials:  List of Trial objects
+
+- - SnipAndStitch_MNERaw (snipandstitch.Functions.SnipAndStitch_MNERaw)
+SnipAndStitch_MNERaw(raw, channel, saccAnnots, interpolateDPup=True)
+in mne raw object, at the channel channel, apply snipandstitch to all events in saccAnnots
+    raw:             mne Raw object
+    channel:         string, name of to-be-corrected channel. e.g. 'pupil'
+    saccAnnots:      mne Annotations object for all to-be-corrected saccades
+    interpolateDPup  bool, whether to interpolate intrasaccadic pupil size change.
+
+- - SnipAndStitch_MNEEpochs (snipandstitch.Functions.SnipAndStitch_MNEEpochs)
+SnipAndStitch_MNEEpochs(epochs, channel, interpolateDPup = True, residualErrorCorrectiononNoSaccades = 'raise', match='ssSacc'))
+applies snipandstitch correction to epochs. 
+      epochs:                                mne Epochs object
+      channel:                               string, name of to-be-corrected channel. e.g. 'pupil'
+      interpolateDPup                        bool, whether to interpolate intrasaccadic pupil size change.
+      residualErrorCorrectiononNoSaccades    what to do for a trial without saccades
+      match                                  string, name of annotations to-be-snipped
+
+note. For this correction, all saccadeAnnotations need to have been added to mne raw object. 
+        In-fuction, we let mne dig up all the relative annotations per epoch.  
+        
