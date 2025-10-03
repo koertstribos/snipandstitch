@@ -8,7 +8,7 @@ usage:
 before using the correction one needs:
 
 0. "pip install git+https://github.com/koertstribos/snipandstitch", or download this package, and put the full folder in your python working directory
-1. gaze and pupil data, as a list of tuples or dicts where each sample is saved like (x,y,pupilSize), x and y may be dummy values 0.
+1. gaze and pupil data, as mne raw object, or a list of tuples or dicts where each sample is saved like (x,y,pupilSize), x and y may be dummy values 0.
 2. a list of to-be-corrected saccades
 
 - - - mne implementation - -
