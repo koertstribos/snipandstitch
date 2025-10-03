@@ -14,7 +14,7 @@ class _E():
     #draws the event on a mpl plot
     #arguments:
     #   ax: the axis to draw the event on
-    #   relativeStart: the index at which the plot starts, relative to trial start
+    #   ylims: ylims to be passed to fill_between
     #   resolution: the number of indeces per plotpoint
     #returns:
     #   None
@@ -28,4 +28,5 @@ class _E():
         ax.axvline(start, c=col, linestyle=linestyle)
         ax.axvline(end, c=col, linestyle=linestyle)
         ax.fill_between([start, end], ylims[0], ylims[1], color=col, alpha=0.5)
+
 
