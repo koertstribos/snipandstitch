@@ -3,6 +3,9 @@ Welcome to the snipandstitch repository
 The snipandstitch is a simple, universal correction for the Pupil Foreshortening Error in Saccades
 the correction works by discarding unexpected change in pupil size observed during saccades
 
+documentation:
+see documentation file 
+
 usage:
 
 before using the correction one needs:
