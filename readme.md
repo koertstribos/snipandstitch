@@ -39,7 +39,7 @@ Critically, snipandstitch expects either a list of annotations to be snipped (ra
 
         annots:    previously constructed Annotations object
 
-if using and Epochs object, 
+if using an Epochs object, 
 
 Create Epochs objects for each trial. Alternatively, you can do the correction for all saccades in a single recording in one go (not recommended due to drift)
 
