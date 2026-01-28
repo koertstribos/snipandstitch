@@ -1,19 +1,26 @@
-# This file is part of the 'snipandstitch' package.
-#this file contains private and internal definitions for the Trial class
-#see Trial.py for public methods
+"""This file is part of the 'snipandstitch' package.
+
+This module contains private and internal definitions for the Trial class.
+See Trial.py for public methods.
+"""
 
 from . import _SnipStitch
 import matplotlib.pyplot as plt
 from math import dist
 
-#one trial
-#contains information of one trial
-
-#    initialisation
-#    See subclass Trial (Trial.py)
 class _T():
-    #__init__
+    """Internal Trial class containing information of one trial.
+    
+    See subclass Trial (Trial.py) for public API.
+    """
     def __init__(self, trace, events, samplingRate):
+        """Initialize Trial object.
+        
+        Args:
+            trace: List of samples, each containing x, y, and pupil size
+            events: List of Event objects
+            samplingRate: Sampling rate in Hz
+        """
         self._trace = trace
         self._events = events
         self._samplingRate = samplingRate
@@ -26,14 +33,16 @@ class _T():
         #call _MakeSnipStitches
         self._MakeSnipStitches()
 
-    #_Correct
-    #returns corrected pupil size value at specified index
-    #args:
-    #index:    int, representing index relative to trial
-    #value:    float, value before correction
-    #returns:
-    #float; value after correction
     def _Correct(self, index, value):
+        """Return corrected pupil size value at specified index.
+        
+        Args:
+            index: int, representing index relative to trial
+            value: float, value before correction
+        
+        Returns:
+            float: value after correction
+        """
         if not hasattr(self, '_SnipStitches'):
             raise ValueError("SnipStitches not set")
         
@@ -41,12 +50,14 @@ class _T():
             value = ss.Correct(index, value)
         return value
 
-    #__getitem__ 
-    #return a pupil size value at a given inex
-    #corrects the pupil size value if corrections are set. If not, returns raw pupsize
-    #in:
-    #    index: int, representing index relative to trial
     def __getitem__(self, index):
+        """Return a pupil size value at a given index.
+        
+        Corrects the pupil size value if corrections are set. If not, returns raw pupil size.
+        
+        Args:
+            index: int, representing index relative to trial
+        """
         if isinstance(index, slice):
             return [self[i] for i in range(index.start, index.stop, index.step)]
         
@@ -61,38 +72,32 @@ class _T():
         print(f"Warning: no SnipStitches set for trial, returning raw value")
         return val
 
-    #residualCorrection 
-    #sum of values that each snipandstitch uses to correct pupil size
-    #this value should be near 0 for properly working methods, assuming that gaze starts and ends at roughly the same position
     @property
     def residualCorrection(self):
+        """Return sum of correction values from each snipandstitch.
+        
+        This value should be near 0 for properly working methods, assuming that gaze
+        starts and ends at roughly the same position.
+        """
         if not hasattr(self, '_SnipStitches'):
             raise ValueError("SnipStitches not set when accessing residual error of a trial")
         return sum([ss.corrValue for ss in self._SnipStitches])
 
-    #eventCount
-    #count of events
     @property
     def eventCount(self):
+        """Return the number of events in this trial."""
         return len(self._events)
 
-    #__len__
-    #count of samples
     def __len__(self):
+        """Return the number of samples in this trial."""
         return len(self._trace)
 
-    #__repr__
-    #just returns 'Trial'
     def __repr__(self):
+        """Return string representation of Trial object."""
         return f"Trial"
 
-    #_MakeSnipStitches
-    #initialises SnipStitch objects belonging to this trial
-    #args:
-    #
-    #returns:
-    #    None
     def _MakeSnipStitches(self):
+        """Initializes SnipStitch objects for this trial."""
         self._SnipStitches = []
 
         if self._samplingRate is None:
@@ -103,14 +108,13 @@ class _T():
                 self._SnipStitches.append(_SnipStitch.SnipStitchSRate(self, event))
 
     #_SetSnipStitchSettings
-    #sets the settings of each snipstitch belonging to this trial
-    #args:
-    #    doInterpolateSlope: whether to interpolate slope (bool). If None, setting is left unchanged
-    #    participantCorrectionValue:    value to correct linear error accumulation. A float to set that value If None, setting is left unchanged.
-    # returns:
-    #    None
     #see Functions.py for usage
     def _SetSnipStitchSettings(self, doInterpolateSlope = None, participantCorrectionValue = None):
+        """Set the settings of each SnipStitch belonging to this trial.
+        Args:
+            doInterpolateSlope : Bool or None. If not None, determines whether intra-saccadic dPup is estimated
+            participantCorrectionValue : float or None. Per-saccade buildup value. 0 or None for no buildup correction
+        """
         for ss in self._SnipStitches:
             ss.SetCorrectionSettings(doInterpolateSlope, participantCorrectionValue)
 
@@ -121,6 +125,7 @@ class _T():
     #out:
     #    Int, Index clamped between 0 and len(self)-1
     def _ClampIndex(self, index):
+        """Clamp an index to be within valid range of the trial."""
         return max(0, min(len(self)-1, index))
 
     #_RawPupsize
@@ -130,6 +135,7 @@ class _T():
     #out:
     #    float, raw pupil size at index
     def _RawPupsize(self, index):
+        """Return raw pupil size at specified index.""" 
         return self._trace[self._ClampIndex(index)][2]
 
     #_Pos
@@ -139,6 +145,7 @@ class _T():
     #out:
     #    tuple (x,y), gaze coordinates at index. Type depends on user definition.
     def _Pos(self, index):
+        """Return gaze position at specified index."""
         return self._trace[self._ClampIndex(index)][:2]
 
     #_CorrectedPupsize
@@ -148,6 +155,7 @@ class _T():
     #out:
     #    float, corrected pupil size from that index
     def _CorrectedPupsize(self, index):
+        """Return corrected pupil size at specified index."""
         return self[self._ClampIndex(index)]
 
     #_View
@@ -157,6 +165,9 @@ class _T():
     #out:
     #    None
     def _View(self, viewer):
+        """Visualize this trial using the provided viewer object.
+        args:
+        viewer: a Viewer object"""
         startIndex = 0
         endIndex = len(self)
         

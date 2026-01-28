@@ -1,7 +1,5 @@
-# This file is part of the 'snipandstitch' package.
-# This file contains the Event class
-# The Event class contains information of one (saccade) event
-
+"""Top-level Event class, part of the 'SnipandStitch package.
+Event class contains information of one (saccade) event"""
 from . import _Event
 
 #Event class
@@ -11,5 +9,10 @@ from . import _Event
 #start: start index of the event (relative to the trial)
 #end: end index of the event (relative to the trial)
 class Event(_Event._E):
+    """Initialize Event object.
+    Args:
+        start: start index of the event (relative to the trial)
+        end: end index of the event (relative to the trial)
+    """ 
     def __init__(self, start, end):
         super().__init__(start, end)

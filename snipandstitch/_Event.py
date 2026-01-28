@@ -1,24 +1,22 @@
-# This file is part of the 'snipandstitch' package.
-#This file contains the class for the event object
-#See Event.py for public methods
+"""This file is part of the 'snipandstitch' package.
+
+This module contains the internal Event class. See Event.py for public methods.
+"""
 
 class _E():
+    """Internal Event class."""
     def __init__(self, start, end):
         self.start = start
         self.end = end
 
-    # # # # # # # # # 
-    #protected methods
-
-    #Draw
-    #draws the event on a mpl plot
-    #arguments:
-    #   ax: the axis to draw the event on
-    #   ylims: ylims to be passed to fill_between
-    #   resolution: the number of indeces per plotpoint
-    #returns:
-    #   None
     def Draw(self, ax, ylims, resolution):
+        """Draw the event on a matplotlib plot.
+        
+        Args:
+            ax: the axis to draw the event on
+            ylims: ylims to be passed to fill_between
+            resolution: the number of indices per plot point
+        """
         start = (self.start) // resolution
         end = (self.end) // resolution
 
