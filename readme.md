@@ -6,6 +6,9 @@ the correction works by discarding unexpected change in pupil size observed duri
 documentation:
 see documentation file 
 
+mne epochs example:
+see example.py
+
 usage:
 
 before using the correction one needs:
